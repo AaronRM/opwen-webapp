@@ -20,6 +20,13 @@ module.exports = function(grunt) {
           {
             expand: true,
             flatten: true,
+            src: ['bower_components/bootstrap/fonts/*'],
+            dest: 'opwen_email_client/webapp/static/fonts/',
+            filter: 'isFile'
+          },
+          {
+            expand: true,
+            flatten: true,
             src: [
               'bower_components/flag-icon-css/flags/4x3/ca.svg',
               'bower_components/flag-icon-css/flags/4x3/cd.svg',
