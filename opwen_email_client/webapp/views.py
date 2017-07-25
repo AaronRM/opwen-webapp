@@ -3,6 +3,9 @@ from datetime import timedelta
 from io import BytesIO
 from os import path
 from typing import Iterable
+import base64
+from zipfile import ZipFile
+import json
 
 from babel import Locale
 from flask import Response
@@ -310,6 +313,19 @@ def _emails_view(emails: Iterable[dict], page: int,
             sent_at_utc = datetime.strptime(sent_at, '%Y-%m-%d %H:%M')
             sent_at_local = sent_at_utc - timezone_offset
             email['sent_at'] = sent_at_local.strftime('%Y-%m-%d %H:%M')
+        if email.get('attachments'):
+            for attachment in email.get('attachments'):
+                if attachment.get('filename').endswith('.lesson'):
+                    b64_encoded_zip = attachment.get('content')
+                    zip_content = BytesIO(base64.b64decode(b64_encoded_zip))
+                    with ZipFile(zip_content) as zip_file:
+                        with zip_file.open('index.json') as lesson_json:
+                            lesson_manifest = json.loads(lesson_json.read().decode("utf-8"))
+                            # Loop over the slides and read the content of the image files
+                            for slide in lesson_manifest['slides']:
+                                with zip_file.open(slide['imageFile']) as image_file:
+                                    slide['image'] = 'data:image/gif;base64,' + base64.b64encode(image_file.read()).decode()
+                            attachment['lesson'] = lesson_manifest
 
     attachments_session.store(emails)
     return _view(template, emails=emails, page=page)
