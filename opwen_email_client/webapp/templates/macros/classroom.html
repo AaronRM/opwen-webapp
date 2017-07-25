@@ -8,23 +8,23 @@
             <!-- Indicators -->
             <ol class="carousel-indicators">
                 {% for slide in attachment['lesson']['slides'] %}
-                    {% if loop.index0 == 0 %}
-                    <li data-target="#myCarousel" data-slide-to="{{loop.index0}}" class="active"></li>
-                    {% else %}
-                    <li data-target="#myCarousel" data-slide-to="{{loop.index0}}"></li>
-                    {% endif %}
+                {% if loop.index0 == 0 %}
+                <li data-target="#myCarousel" data-slide-to="{{loop.index0}}" class="active"></li>
+                {% else %}
+                <li data-target="#myCarousel" data-slide-to="{{loop.index0}}"></li>
+                {% endif %}
                 {% endfor %}
             </ol>
 
             <!-- Wrapper for slides -->
             <div class="carousel-inner">
                 {% for slide in attachment['lesson']['slides'] %}
-                    {% if loop.index0 == 0 %}
-                    <div class="item active">
-                    {% else %}
-                    <div class="item">
+                {% if loop.index0 == 0 %}
+                <div class="item active">
+                {% else %}
+                <div class="item">
                     {% endif %}
-                    <img src="{{slide['image']}}" />
+                    <img src="{{slide['image']}}"/>
                     <div class="carousel-caption">
                         <p>{{slide['text']}}</p>
                     </div>
@@ -41,6 +41,24 @@
                 <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
                 <span class="sr-only">Next</span>
             </a>
+            <script type="text/javascript">
+            <!-- Add touch functionality to Carousel -->
+            $(".carousel").on("touchstart", function(event){
+                var xClick = event.originalEvent.touches[0].pageX;
+                $(this).one("touchmove", function(event){
+                    var xMove = event.originalEvent.touches[0].pageX;
+                    if( Math.floor(xClick - xMove) > 5 ){
+                        $(".carousel").carousel('next');
+                    }
+                    else if( Math.floor(xClick - xMove) < -5 ){
+                        $(".carousel").carousel('prev');
+                    }
+                });
+                $(".carousel").on("touchend", function(){
+                        $(this).off("touchmove");
+                });
+            });
+            </script>
         </div>
     </div>
 </div>
