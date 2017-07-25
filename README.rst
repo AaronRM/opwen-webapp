@@ -80,34 +80,25 @@ First, get the source code.
 
   git clone git@github.com:ascoderu/opwen-webapp.git
 
-Second, install the system-level dependencies using your package manager and set
-all the required environment variables to dummy values.
+Second, install the system-level dependencies using your package manager,
+e.g. on Ubuntu:
 
 .. sourcecode :: sh
 
-  sudo dnf install npm
-
-  export OPWEN_EMAIL_SERVER_WRITE_API='localhost:8080'
-  export OPWEN_EMAIL_SERVER_READ_API='localhost:8080'
-  export OPWEN_SESSION_KEY='session-secret'
-  export OPWEN_CLIENT_ID='dev-client-id'
-  export OPWEN_CLIENT_NAME='dev-client-name'
-  export OPWEN_ADMIN_SECRET='admin-secret'
-  export OPWEN_PASSWORD_SALT='password-salt'
-  export OPWEN_REMOTE_ACCOUNT_NAME='azure-storage-account-name'
-  export OPWEN_REMOTE_ACCOUNT_KEY='azure-storage-account-key'
+  sudo apt-get install -y python3-venv npm
+  sudo ln -s /usr/bin/nodejs /usr/bin/node
 
 Third, use the makefile to verify your installation by running the tests and
 starting up the server. The makefile will automatically install all required
-dependencies into a virtual environment. The server will automatically reload
-whenever any of the Flask code or Jinja templates are changed.
+dependencies into a virtual environment and set up some dummy environment
+variables for local development. The server will automatically reload whenever
+any of the Flask code or Jinja templates are changed.
 
 .. sourcecode :: sh
 
   cd opwen-webapp
 
   make tests
-  make build-js
   make server
 
 The routes of the app are defined in `views.py <https://github.com/ascoderu/opwen-webapp/blob/master/opwen_email_client/webapp/views.py>`_

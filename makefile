@@ -10,6 +10,7 @@ NPM=/usr/bin/npm
 py_env=venv
 py_packages=opwen_email_client
 grunt=./node_modules/grunt/bin/grunt
+env=./.env
 app_runner=$(py_env)/bin/python ./manage.py devserver
 
 .PHONY: default
@@ -51,5 +52,5 @@ prepare-translations: babel.pot venv
 compile-translations: venv
 	$(py_env)/bin/pybabel compile -d opwen_email_client/webapp/translations
 
-server: venv
+server: venv compile-translations build-js
 	$(app_runner)

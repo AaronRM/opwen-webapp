@@ -1,6 +1,8 @@
 from glob import glob
 from os.path import join
+from typing import List
 
+from dotenv import load_dotenv
 from flask import Flask
 from flask_script import Command
 
@@ -8,11 +10,20 @@ from flask_script import Command
 # noinspection PyAbstractClass,PyMethodOverriding
 class DevServerCommand(Command):
     def __call__(self, app: Flask):
-        extra_files = _templates_paths_for(app)
-        app.run(debug=True, extra_files=extra_files)
+        _load_environment(app)
+
+        templates_paths = _templates_paths_for(app, '*.html')
+        reload_server_if_changed = templates_paths
+
+        app.run(debug=True, extra_files=reload_server_if_changed)
 
 
-def _templates_paths_for(app: Flask, templates_matcher: str='*.html'):
+def _load_environment(app: Flask) -> None:
+    dotenv_path = join(app.root_path, '..', '..', '.env')
+    load_dotenv(dotenv_path)
+
+
+def _templates_paths_for(app: Flask, templates_matcher: str) -> List[str]:
     templates_directory = join(app.root_path, app.template_folder)
     templates_glob = join(templates_directory, '**', templates_matcher)
     return glob(templates_glob, recursive=True)
