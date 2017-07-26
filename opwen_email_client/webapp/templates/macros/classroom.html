@@ -6,7 +6,7 @@
     <div class="col-sm-12">
         <div id="myCarousel" class="carousel slide">
             <!-- Indicators -->
-            <ol class="carousel-indicators">
+            <ol class="carousel-indicators" style="opacity:0.3;background:black">
                 {% for slide in attachment['lesson']['slides'] %}
                 {% if loop.index0 == 0 %}
                 <li data-target="#myCarousel" data-slide-to="{{loop.index0}}" class="active"></li>
@@ -25,7 +25,7 @@
                     <div class="item">
                     {% endif %}
                     <img src="{{slide['image']}}"/>
-                    <div class="carousel-caption" style="opacity:0.6;background:black">
+                    <div class="carousel-caption" >
                         <p>{{slide['text']}}</p>
                     </div>
                     </div>
@@ -60,6 +60,25 @@
             });
             </script>
         </div>
+        <div id="row_under_carousel">
+            <div class="caption-below">
+            <span></span>
+            </div>
+        </div>
+        <script type="text/javascript">
+            // Make captions render below the carousel
+            $(function() {
+                $('.carousel').carousel();
+                var caption = $('div.item:nth-child(1) .carousel-caption');
+                $('#row_under_carousel span').html(caption.html());
+                caption.css('display','none');
+                $(".carousel").on('slide.bs.carousel', function(evt) {
+                    var caption = $('div.item:nth-child(' + ($(evt.relatedTarget).index()+1) + ') .carousel-caption');
+                    $('#row_under_carousel span').html(caption.html());
+                    caption.css('display','none');
+                });
+            });
+        </script>
     </div>
 </div>
 {% endif %}
