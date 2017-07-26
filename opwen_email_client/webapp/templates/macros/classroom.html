@@ -2,16 +2,18 @@
 {% for attachment in attachments %}
 {% if attachment['lesson'] %}
 
+{% set lesson_id = range(1, 500000) | random %}
+
 <div class="row hidden-print">
     <div class="col-sm-12">
-        <div id="myCarousel" class="carousel slide">
+        <div id="myCarousel_{{lesson_id}}" class="carousel slide">
             <!-- Indicators -->
             <ol class="carousel-indicators" style="opacity:0.3;background:black">
                 {% for slide in attachment['lesson']['slides'] %}
                 {% if loop.index0 == 0 %}
-                <li data-target="#myCarousel" data-slide-to="{{loop.index0}}" class="active"></li>
+                <li data-target="#myCarousel_{{lesson_id}}" data-slide-to="{{loop.index0}}" class="active"></li>
                 {% else %}
-                <li data-target="#myCarousel" data-slide-to="{{loop.index0}}"></li>
+                <li data-target="#myCarousel_{{lesson_id}}" data-slide-to="{{loop.index0}}"></li>
                 {% endif %}
                 {% endfor %}
             </ol>
@@ -33,34 +35,34 @@
             </div>
 
             <!-- Left and right controls -->
-            <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+            <a class="left carousel-control" href="#myCarousel_{{lesson_id}}" role="button" data-slide="prev">
                 <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
                 <span class="sr-only">Previous</span>
             </a>
-            <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+            <a class="right carousel-control" href="#myCarousel_{{lesson_id}}" role="button" data-slide="next">
                 <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
                 <span class="sr-only">Next</span>
             </a>
             <script type="text/javascript">
             // Add touch functionality to Carousel
-            $(".carousel").on("touchstart", function(event){
+            $("#myCarousel_{{lesson_id}}").on("touchstart", function(event){
                 var xClick = event.originalEvent.touches[0].pageX;
                 $(this).one("touchmove", function(event){
                     var xMove = event.originalEvent.touches[0].pageX;
                     if( Math.floor(xClick - xMove) > 5 ){
-                        $(".carousel").carousel('next');
+                        $("#myCarousel_{{lesson_id}}").carousel('next');
                     }
                     else if( Math.floor(xClick - xMove) < -5 ){
-                        $(".carousel").carousel('prev');
+                        $("#myCarousel_{{lesson_id}}").carousel('prev');
                     }
                 });
-                $(".carousel").on("touchend", function(){
+                $("#myCarousel_{{lesson_id}}").on("touchend", function(){
                         $(this).off("touchmove");
                 });
             });
             </script>
         </div>
-        <div id="row_under_carousel">
+        <div id="row_under_carousel_{{lesson_id}}">
             <div class="caption-below">
             <span></span>
             </div>
@@ -68,13 +70,12 @@
         <script type="text/javascript">
             // Make captions render below the carousel
             $(function() {
-                $('.carousel').carousel();
-                var caption = $('div.item:nth-child(1) .carousel-caption');
-                $('#row_under_carousel span').html(caption.html());
+                var caption = $('#myCarousel_{{lesson_id}} div.item:nth-child(1) .carousel-caption');
+                $('#row_under_carousel_{{lesson_id}} span').html(caption.html());
                 caption.css('display','none');
-                $(".carousel").on('slide.bs.carousel', function(evt) {
-                    var caption = $('div.item:nth-child(' + ($(evt.relatedTarget).index()+1) + ') .carousel-caption');
-                    $('#row_under_carousel span').html(caption.html());
+                $("#myCarousel_{{lesson_id}}").on('slide.bs.carousel', function(evt) {
+                    var caption = $('#myCarousel_{{lesson_id}} div.item:nth-child(' + ($(evt.relatedTarget).index()+1) + ') .carousel-caption');
+                    $('#row_under_carousel_{{lesson_id}} span').html(caption.html());
                     caption.css('display','none');
                 });
             });
